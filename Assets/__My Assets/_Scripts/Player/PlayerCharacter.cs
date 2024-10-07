@@ -23,6 +23,7 @@ namespace __My_Assets._Scripts.Player
         
         [Header("Jumping")]
         [SerializeField] private float jumpForce;
+        [SerializeField] private float coyoteTime;
         
         [Header("Dashing")]
         [SerializeField] private float dashSpeed;
@@ -58,6 +59,8 @@ namespace __My_Assets._Scripts.Player
         private float _lastDashTime;
         
         private bool _isDashing;
+        
+        private float _lastGroundedTime;
         
         public void Init()
         {

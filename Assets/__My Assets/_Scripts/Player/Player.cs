@@ -1,5 +1,7 @@
 using System;
 using __My_Assets._Scripts.Player;
+using MoreMountains.Feedbacks;
+using TMPro;
 using UnityEngine;
 
 
@@ -7,10 +9,10 @@ public class Player : MonoBehaviour
 {
     [SerializeField] private PlayerCharacter playerCharacter;
     [SerializeField] private PlayerCamera playerCamera;
+    [SerializeField] private TMP_Text velocityText;
     
     private PlayerInput _playerInput;
     
-
     private void Awake()
     {
         _playerInput = new PlayerInput();
@@ -51,7 +53,6 @@ public class Player : MonoBehaviour
             DashInput = _playerInput.Gameplay.Dash.WasPressedThisFrame()
         };
         
-        
         playerCharacter.UpdateBody(deltaTime);
         playerCharacter.UpdateInput(playerInputData);
         
@@ -59,10 +60,14 @@ public class Player : MonoBehaviour
 
     private void LateUpdate()
     {
+        float deltaTime = Time.deltaTime;
+        
         // I have to update the camera position here because the player need to finish updating
         // the character position before the camera or the camera will lag behind the player
         playerCamera.UpdatePosition();
-        playerCamera.UpdateCameraFOV(playerCharacter.GetCurrentVelocity(), playerCharacter.GetWalkSpeed());
+        playerCamera.UpdateCameraFOV(playerCharacter.GetCurrentVelocity(), playerCharacter.GetWalkSpeed(),deltaTime);
+        
+        velocityText.text = "Speed: " + playerCharacter.GetCurrentVelocity().magnitude.ToString("F2");
     }
 }
 

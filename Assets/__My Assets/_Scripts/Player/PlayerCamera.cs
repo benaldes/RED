@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using MoreMountains.Feedbacks;
+using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
@@ -6,35 +7,34 @@ namespace __My_Assets._Scripts.Player
 {
     public class PlayerCamera : MonoBehaviour
     {
-        [Header("Refrances")]
+        [Header("References")]
         [SerializeField] private Transform cameraTarget;
         [SerializeField] private Camera mainCamera;
         [SerializeField] private Volume volume;
-        [SerializeField] private VolumeProfile volumeProfile;
+        
         
         [Space]
-        [SerializeField] private float sensitivity = 0.8f;
-
+        [SerializeField] private float sensitivity;
         [SerializeField] private float cameraFOVChangeRate;
         [SerializeField] private float cameraFOVMaxChange;
+        
+        [SerializeField] private float lensDistortionChangeRate;
+        [SerializeField] private float lensDistortionMaxChange;
 
         private Vector3 _eulerAngles;
         
         private float _initFOV;
+        
+        private LensDistortion _lensDistortion;
 
         public void Init()
         {
-            
+            volume.profile.TryGet(out _lensDistortion);
             _initFOV = mainCamera.fieldOfView;
             _eulerAngles = transform.rotation.eulerAngles;
         }
         public void UpdateRotation(Vector2 look)
         {
-            /*LensDistortion lensDistortion = volumeProfile.components[0] as LensDistortion;
-            lensDistortion.intensity = new ClampedFloatParameter(0.5f, 0, 1);
-            lensDistortion.active = true;
-            lensDistortion.xMultiplier = new ClampedFloatParameter(0.5f, 0, 1);*/
-            
             // create the new angle the player is looking
             _eulerAngles += new Vector3(-look.y, look.x) * sensitivity;
             
@@ -51,23 +51,26 @@ namespace __My_Assets._Scripts.Player
         }
         
         // makes the camera field of view change based on player velocity
-        public void UpdateCameraFOV(Vector3 characterVelocity,float normalSpeed)
+        public void UpdateCameraFOV(Vector3 characterVelocity,float normalSpeed,float deltaTime)
         {
             float playerSpeed = characterVelocity.magnitude;
             float a = playerSpeed/normalSpeed;
             float currentFOV = mainCamera.fieldOfView;
             float targetFOV = _initFOV + (cameraFOVMaxChange * Mathf.Clamp((a - 1), 0, 2));
-            mainCamera.fieldOfView = Mathf.Lerp(currentFOV, targetFOV, 1 - Mathf.Exp(-cameraFOVMaxChange *  Time.deltaTime));
+            /*mainCamera.fieldOfView = Mathf.Lerp
+            (
+                currentFOV,
+                targetFOV,
+                1 - Mathf.Exp(-cameraFOVMaxChange *  deltaTime)
+            );
+            */
             
-            if (volumeProfile.TryGet(out LensDistortion lensDistortion))
-            {
-                // Enable the override for intensity
-                lensDistortion.intensity.overrideState = true;
+            float b  = Mathf.Clamp(-a,-0.3f,0f);
 
-                // Set the intensity value
-                lensDistortion.intensity.value = 0.5f;
-            }
+            _lensDistortion.intensity.overrideState = true;
+            _lensDistortion.intensity.value = -b;
             
+
         }
         
     }
