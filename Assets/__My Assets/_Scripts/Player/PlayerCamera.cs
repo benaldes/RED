@@ -13,13 +13,16 @@ namespace __My_Assets._Scripts.Player
         [SerializeField] private Volume volume;
         
         
+        
+        
         [Space]
         [SerializeField] private float sensitivity;
         [SerializeField] private float cameraFOVChangeRate;
         [SerializeField] private float cameraFOVMaxChange;
         
-        [SerializeField] private float lensDistortionChangeRate;
-        [SerializeField] private float lensDistortionMaxChange;
+        [SerializeField] private float lensDistortionMaxAmount;
+        [SerializeField] private float maxSpeedToLensDistortion;
+        [SerializeField] private float minSpeedToLensDistortion;
 
         private Vector3 _eulerAngles;
         
@@ -51,27 +54,20 @@ namespace __My_Assets._Scripts.Player
         }
         
         // makes the camera field of view change based on player velocity
-        public void UpdateCameraFOV(Vector3 characterVelocity,float normalSpeed,float deltaTime)
+        public void UpdateCameraFOV(Vector3 characterVelocity)
         {
-            float playerSpeed = characterVelocity.magnitude;
-            float a = playerSpeed/normalSpeed;
-            float currentFOV = mainCamera.fieldOfView;
-            float targetFOV = _initFOV + (cameraFOVMaxChange * Mathf.Clamp((a - 1), 0, 2));
-            /*mainCamera.fieldOfView = Mathf.Lerp
-            (
-                currentFOV,
-                targetFOV,
-                1 - Mathf.Exp(-cameraFOVMaxChange *  deltaTime)
-            );
-            */
+            // remove vertical component of velocity
+            Vector3 characterHorizontalVelocity = Vector3.ProjectOnPlane(characterVelocity, Vector3.up); 
             
-            float b  = Mathf.Clamp(-a,-0.3f,0f);
-
+            float a = Mathf.InverseLerp(minSpeedToLensDistortion, maxSpeedToLensDistortion, characterHorizontalVelocity.magnitude);
+            a = Mathf.Lerp(0f, lensDistortionMaxAmount, a);
+            
             _lensDistortion.intensity.overrideState = true;
-            _lensDistortion.intensity.value = -b;
-            
-
+            _lensDistortion.intensity.value = -a;
+        
         }
+
+        
         
     }
 }

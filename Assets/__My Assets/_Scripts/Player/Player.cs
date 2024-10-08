@@ -65,7 +65,7 @@ public class Player : MonoBehaviour
         // I have to update the camera position here because the player need to finish updating
         // the character position before the camera or the camera will lag behind the player
         playerCamera.UpdatePosition();
-        playerCamera.UpdateCameraFOV(playerCharacter.GetCurrentVelocity(), playerCharacter.GetWalkSpeed(),deltaTime);
+        playerCamera.UpdateCameraFOV(playerCharacter.GetCurrentVelocity());
         
         velocityText.text = "Speed: " + playerCharacter.GetCurrentVelocity().magnitude.ToString("F2");
     }

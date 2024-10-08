@@ -10,6 +10,7 @@ namespace __My_Assets._Scripts.Player
         [SerializeField] private KinematicCharacterMotor motor;
         [SerializeField] private Transform root;
         [SerializeField] private Transform cameraTarget;
+        [SerializeField] private ParticleSystem dashWhiteLinesParticleSystem;
         
         [Header("Ground Movement")]
         [SerializeField] private float walkSpeed;
@@ -229,6 +230,8 @@ namespace __My_Assets._Scripts.Player
                 // Start dash
                 if (_requestedDash && Time.time > _lastDashTime + dashCooldown && _requestedMovement.magnitude > 0f)
                 {
+                    
+                    dashWhiteLinesParticleSystem.Play();
                     _isDashing = true;
                     _requestedDash = false;
                     _lastDashTime = Time.time;
