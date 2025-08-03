@@ -1,4 +1,5 @@
 using System;
+#if UNITY_EDITOR
 using UnityEditor;
 using UnityEngine;
 
@@ -20,3 +21,4 @@ public class TriggerCollider : MonoBehaviour
         Handles.DrawWireDisc(transform.position, Vector3.forward, radius);
     }
 }
+#endif
