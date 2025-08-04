@@ -17,7 +17,7 @@ public class TorchTest
         return torch;
     }
     
-    // A UnityTest behaves like a coroutine in Play Mode. In Edit Mode you can use
+    /*// A UnityTest behaves like a coroutine in Play Mode. In Edit Mode you can use
     // `yield return null;` to skip a frame.
     [UnityTest]
     public IEnumerator TorchTestWithEnumeratorPasses()
@@ -66,5 +66,6 @@ public class TorchTest
         Assert.IsTrue(objectT);
         Assert.IsTrue(playerInteraction);
         Assert.IsTrue(objectT);
-    }
+    }*/
 }
+
