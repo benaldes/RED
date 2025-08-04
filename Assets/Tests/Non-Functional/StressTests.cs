@@ -2,21 +2,38 @@
 using System.Collections.Generic;
 using UnityEngine.TestTools;
 
+/// <summary>
+/// Stress tests for the Torch class, specifically for performance under heavy load.
+/// </summary>
 public class StressTests
 {
-	private const int MAX_TORCH_COUNT = 100_000;
+	private const int STRESS_MAX_TORCH_CAPACITY = 500_000;
 
-	private readonly List<Torch> _torches = new(MAX_TORCH_COUNT);
+	private readonly List<Torch> _torches = new(STRESS_MAX_TORCH_CAPACITY);
 
-	private IEnumerator SpawnAndLitTorch(int iterations) => LoadTests.SpawnAndLitTorch(_torches, iterations);
-
+	/// <summary>
+	/// Spawns and lights up to 5,000 torches.
+	/// </summary>
 	[UnityTest]
-	public IEnumerator SpawnAndLitTorch1K() => SpawnAndLitTorch(1_000);
+	public IEnumerator SpawnAndLight5kTorches() => SpawnAndLightSingleTorch(5_000);
 
+	/// <summary>
+	/// Spawns and lights up to 50,000 torches.
+	/// </summary>
 	[UnityTest]
-	public IEnumerator SpawnAndLitTorch10K() => SpawnAndLitTorch(10_000);
+	public IEnumerator SpawnAndLight50kTorches() => SpawnAndLightSingleTorch(50_000);
 
+	/// <summary>
+	/// Spawns and lights up to 500,000 torches.
+	/// </summary>
 	[UnityTest]
-	public IEnumerator SpawnAndLitTorch100K() => SpawnAndLitTorch(100_000);
+	public IEnumerator SpawnAndLight500kTorches() => SpawnAndLightSingleTorch(500_000);
+
+	/// <summary>
+	/// Spawns and lights a specified number of torches.
+	/// </summary>
+	/// <param name="iterations">The number of iterations to perform.</param>
+	/// <returns>A coroutine to be executed by Unity.</returns>
+	private IEnumerator SpawnAndLightSingleTorch(int iterations) => LoadTests.SpawnAndLightTorch(_torches, iterations);
 
 }
